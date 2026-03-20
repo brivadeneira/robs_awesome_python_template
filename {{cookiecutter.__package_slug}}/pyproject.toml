@@ -117,4 +117,4 @@ warn_return_any = true
 warn_unused_ignores = true
 
 [tool.uv]
-exclude-newer = "1 week"
+exclude-newer = "{{ cookiecutter.one_week_calc | default('2026-03-13T00:00:00Z') }}"

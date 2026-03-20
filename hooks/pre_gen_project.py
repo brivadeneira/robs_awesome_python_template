@@ -1,6 +1,9 @@
+import json
+import os
 import re
 import shutil
 import sys
+from datetime import date, timedelta, datetime
 
 MODULE_REGEX = r"^[_a-zA-Z][_a-zA-Z0-9]+$"
 
@@ -10,6 +13,20 @@ if not re.match(MODULE_REGEX, module_name):
     print("ERROR: %s is not a valid Python module name!" % module_name)
     # exits with status 1 to indicate failure
     sys.exit(1)
+
+last_week = (datetime.now() - timedelta(days=7)).isoformat(timespec="seconds")
+print(f"\nSetting dynamic variable 'one_week_calc' to last week: {last_week}\n")
+
+try:
+    context_file = os.path.join(os.environ.get('COOKIECUTTER_CONTEXT_FILE', ''), 'cookiecutter.json')
+    if os.path.exists(context_file):
+        with open(context_file, "r") as f:
+            context = json.load(f)
+        context["one_week_calc"] = last_week
+        with open(context_file, "w") as f:
+            json.dump(context, f)
+except Exception:
+    pass
 
 # Check if UV is installed
 if not shutil.which("uv"):
